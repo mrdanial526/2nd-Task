@@ -1,0 +1,141 @@
+/**
+ * AeroGrid Seed Data
+ * Initial realistic state for Drone Fleet and Autonomous Flight Delivery Missions.
+ */
+
+const initialDrones = [
+  {
+    id: 'drn_101',
+    serialNumber: 'AG-X8-9042',
+    model: 'SkyLifter-Pro',
+    maxPayloadKg: 15.0,
+    batteryCapacityMah: 22000,
+    currentBatteryPercentage: 95,
+    status: 'IDLE',
+    homeBaseId: 'HUB-NORTH-01',
+    assignedMissionId: null,
+    totalMissionsCompleted: 142,
+    createdAt: '2026-09-01T08:00:00.000Z',
+    updatedAt: '2026-10-04T12:00:00.000Z',
+  },
+  {
+    id: 'drn_102',
+    serialNumber: 'AG-C4-3011',
+    model: 'AeroCourier-V2',
+    maxPayloadKg: 6.0,
+    batteryCapacityMah: 12000,
+    currentBatteryPercentage: 82,
+    status: 'DISPATCHED',
+    homeBaseId: 'HUB-EAST-02',
+    assignedMissionId: 'del_201',
+    totalMissionsCompleted: 89,
+    createdAt: '2026-09-05T09:30:00.000Z',
+    updatedAt: '2026-10-04T13:45:00.000Z',
+  },
+  {
+    id: 'drn_103',
+    serialNumber: 'AG-H6-7781',
+    model: 'HexaCopter-Heavy',
+    maxPayloadKg: 25.0,
+    batteryCapacityMah: 36000,
+    currentBatteryPercentage: 18,
+    status: 'MAINTENANCE',
+    homeBaseId: 'HUB-SOUTH-03',
+    assignedMissionId: null,
+    totalMissionsCompleted: 210,
+    createdAt: '2026-08-15T11:00:00.000Z',
+    updatedAt: '2026-10-04T10:15:00.000Z',
+  },
+  {
+    id: 'drn_104',
+    serialNumber: 'AG-S2-1109',
+    model: 'SwiftWing-Express',
+    maxPayloadKg: 4.0,
+    batteryCapacityMah: 9000,
+    currentBatteryPercentage: 64,
+    status: 'IN_FLIGHT',
+    homeBaseId: 'HUB-WEST-04',
+    assignedMissionId: 'del_202',
+    totalMissionsCompleted: 67,
+    createdAt: '2026-09-12T14:20:00.000Z',
+    updatedAt: '2026-10-04T14:10:00.000Z',
+  },
+];
+
+const initialDeliveries = [
+  {
+    id: 'del_201',
+    droneId: 'drn_102',
+    state: 'DISPATCHED',
+    priority: 'STANDARD',
+    destination: {
+      address: '742 Evergreen Terrace, Sector 4',
+      latitude: 37.7749,
+      longitude: -122.4194,
+      altitudeMeters: 120,
+    },
+    packageDetails: {
+      trackingCode: 'PKG-2026-1001',
+      weightKg: 3.2,
+      isFragile: false,
+      category: 'DOCUMENTS',
+    },
+    telemetry: {
+      currentLocation: {
+        latitude: 37.7749,
+        longitude: -122.4194,
+        altitudeMeters: 0,
+      },
+      currentSpeedKmh: 0,
+      batteryPercentageRemaining: 82,
+      flightStatus: 'HOVERING',
+      recordedAt: '2026-10-04T13:45:00.000Z',
+    },
+    estimatedFlightDurationMinutes: 14,
+    dispatchedAt: '2026-10-04T13:45:00.000Z',
+    deliveredAt: null,
+    lastTransitionReason: 'Mission dispatched from HUB-EAST-02',
+    createdAt: '2026-10-04T13:40:00.000Z',
+    updatedAt: '2026-10-04T13:45:00.000Z',
+  },
+  {
+    id: 'del_202',
+    droneId: 'drn_104',
+    state: 'IN_FLIGHT',
+    priority: 'EMERGENCY',
+    destination: {
+      address: '1600 Amphitheatre Pkwy, Sector 8',
+      latitude: 37.422,
+      longitude: -122.0841,
+      altitudeMeters: 180,
+    },
+    packageDetails: {
+      trackingCode: 'PKG-2026-1002',
+      weightKg: 1.8,
+      isFragile: true,
+      category: 'MEDICAL_SUPPLIES',
+    },
+    telemetry: {
+      currentLocation: {
+        latitude: 37.55,
+        longitude: -122.2,
+        altitudeMeters: 175.5,
+      },
+      currentSpeedKmh: 68.4,
+      batteryPercentageRemaining: 64,
+      flightStatus: 'IN_FLIGHT',
+      recordedAt: '2026-10-04T14:10:00.000Z',
+    },
+    estimatedFlightDurationMinutes: 22,
+    dispatchedAt: '2026-10-04T14:00:00.000Z',
+    deliveredAt: null,
+    lastTransitionReason: 'Mid-flight telemetry corridor waypoint confirmed',
+    createdAt: '2026-10-04T13:55:00.000Z',
+    updatedAt: '2026-10-04T14:10:00.000Z',
+  },
+];
+
+module.exports = {
+  initialDrones,
+  initialDeliveries,
+};

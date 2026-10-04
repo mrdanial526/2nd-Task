@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AeroGrid — Autonomous Drone Dispatch & Telemetry API</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="grid-background"></div>
+
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand">
+        <div class="brand-icon">🛸</div>
+        <div>
+          <h1>AeroGrid <span class="badge badge-accent">v1.0.0</span></h1>
+          <p class="tagline">Autonomous Drone Dispatch & Airspace Telemetry API</p>
+        </div>
+      </div>
+      <div class="header-status">
+        <div class="status-pill">
+          <span class="status-dot pulse-green"></span>
+          <span>Gateway: <strong id="gatewayStatus">ONLINE</strong></span>
+        </div>
+        <div class="status-pill">
+          <span>Active Fleet: <strong id="fleetCount">4 Units</strong></span>
+        </div>
+        <button id="resetDbBtn" class="btn btn-secondary btn-sm">↺ Reset Datastore</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-container">
+    <!-- Top Stats Row -->
+    <section class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">TOTAL FLEET DRONES</div>
+        <div class="stat-value" id="statTotalDrones">0</div>
+        <div class="stat-meta">Active Autonomous Units</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">DISPATCHED MISSIONS</div>
+        <div class="stat-value text-accent" id="statActiveMissions">0</div>
+        <div class="stat-meta">In-Flight & Pre-Flight</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">COMPLETED DELIVERIES</div>
+        <div class="stat-value text-success" id="statCompletedMissions">0</div>
+        <div class="stat-meta">Safely Delivered</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">GATEKEEPER SECURITY</div>
+        <div class="stat-value text-purple">100%</div>
+        <div class="stat-meta">Dual-Layer Zod Validation</div>
+      </div>
+    </section>
+
+    <!-- Main 2-Column Workspaces -->
+    <div class="dashboard-grid">
+      <!-- Left Column: Fleet & Missions -->
+      <section class="panel">
+        <div class="panel-header">
+          <h2>🚁 Active Drone Fleet Matrix</h2>
+          <button id="refreshFleetBtn" class="btn btn-sm btn-outline">Refresh</button>
+        </div>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Drone ID</th>
+                <th>Serial / Model</th>
+                <th>Battery</th>
+                <th>Max Payload</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="dronesTableBody">
+              <tr><td colspan="6" class="text-center">Loading fleet registry...</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="panel-header mt-4">
+          <h2>📦 Flight Delivery Missions</h2>
+          <button id="refreshMissionsBtn" class="btn btn-sm btn-outline">Refresh</button>
+        </div>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Mission ID</th>
+                <th>Drone</th>
+                <th>Priority</th>
+                <th>Package Weight</th>
+                <th>Lifecycle State</th>
+                <th>State Machine Actions</th>
+              </tr>
+            </thead>
+            <tbody id="missionsTableBody">
+              <tr><td colspan="6" class="text-center">Loading active missions...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Right Column: Interactive Dispatch Studio & Live Console -->
+      <section class="panel">
+        <div class="panel-header">
+          <h2>⚡ Mission Dispatch Studio</h2>
+          <span class="badge badge-info">Dual-Layer Gatekeeper Active</span>
+        </div>
+
+        <form id="dispatchForm" class="form-grid">
+          <div class="form-group">
+            <label for="dispatchDroneId">Select Available Drone (IDLE)</label>
+            <select id="dispatchDroneId" class="form-control" required>
+              <option value="">-- Choose Drone --</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="dispatchPriority">Mission Priority</label>
+            <select id="dispatchPriority" class="form-control">
+              <option value="STANDARD">STANDARD (Max 25kg)</option>
+              <option value="EXPEDITED">EXPEDITED (Max 10kg limit)</option>
+              <option value="EMERGENCY">EMERGENCY (Max 10kg limit)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="dispatchAddress">Delivery Destination Address</label>
+            <input type="text" id="dispatchAddress" class="form-control" value="742 Evergreen Terrace, Sector 4" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="dispatchLat">Latitude (-90 to +90)</label>
+              <input type="number" step="0.0001" id="dispatchLat" class="form-control" value="37.7749" required>
+            </div>
+            <div class="form-group">
+              <label for="dispatchLon">Longitude (-180 to +180)</label>
+              <input type="number" step="0.0001" id="dispatchLon" class="form-control" value="-122.4194" required>
+            </div>
+            <div class="form-group">
+              <label for="dispatchAlt">Altitude (10-500m)</label>
+              <input type="number" id="dispatchAlt" class="form-control" value="120" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="dispatchWeight">Package Weight (kg)</label>
+              <input type="number" step="0.1" id="dispatchWeight" class="form-control" value="3.5" required>
+            </div>
+            <div class="form-group">
+              <label for="dispatchCategory">Cargo Category</label>
+              <select id="dispatchCategory" class="form-control">
+                <option value="GENERAL_CARGO">GENERAL_CARGO</option>
+                <option value="MEDICAL_SUPPLIES">MEDICAL_SUPPLIES</option>
+                <option value="ELECTRONICS">ELECTRONICS</option>
+                <option value="DOCUMENTS">DOCUMENTS</option>
+                <option value="PERISHABLE_FOOD">PERISHABLE_FOOD</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-checkbox">
+            <input type="checkbox" id="dispatchFragile">
+            <label for="dispatchFragile">Fragile Cargo (Enforces &lt; 300m altitude limit)</label>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100">🚀 Dispatch Flight Mission (POST /deliveries)</button>
+        </form>
+
+        <!-- Quick 1-Click Status Code Simulator -->
+        <div class="simulator-box mt-4">
+          <h3>🧪 1-Click Semantic HTTP Status Code Tests</h3>
+          <p class="text-muted">Instantly verify server gatekeeper responses and status code behavior:</p>
+          <div class="btn-group-wrap">
+            <button class="btn btn-xs btn-outline" id="test400Syntax">Trigger 400 Bad Request (Syntax)</button>
+            <button class="btn btn-xs btn-outline" id="test422Expedited">Trigger 422 Unprocessable (Weight &gt; 10kg)</button>
+            <button class="btn btn-xs btn-outline" id="test409State">Trigger 409 Conflict (Illegal State Transition)</button>
+            <button class="btn btn-xs btn-outline" id="test404Drone">Trigger 404 Not Found (Missing Drone)</button>
+            <button class="btn btn-xs btn-success" id="test200Health">Trigger 200 OK (System Health)</button>
+          </div>
+        </div>
+
+        <!-- Live Response Terminal -->
+        <div class="terminal-container mt-4">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span></span><span></span><span></span>
+            </div>
+            <span class="terminal-title">LIVE HTTP RESPONSE LOG</span>
+            <span id="responseStatusBadge" class="badge badge-sm badge-secondary">Ready</span>
+          </div>
+          <pre id="responseOutput" class="terminal-body">// Execute any action or test above to view structured JSON server response envelopes.</pre>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="app-footer">
+    <p>AeroGrid Autonomous Drone Dispatch API • Pure Backend Architecture • Node.js & Express.js</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

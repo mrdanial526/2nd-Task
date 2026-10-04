@@ -1,0 +1,28 @@
+{
+  "name": "decodelabs-backend-api",
+  "version": "1.0.0",
+  "description": "DecodeLabs Project 2: Backend RESTful API Development with Dual-Layer Input Validation and RBAC Security",
+  "main": "src/server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node src/tests/run-tests.js"
+  },
+  "keywords": [
+    "rest-api",
+    "backend",
+    "decodelabs",
+    "validation",
+    "rbac",
+    "jwt",
+    "express"
+  ],
+  "author": "DecodeLabs Engineering",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "zod": "^4.6.5"
+  }
+}
